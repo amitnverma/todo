@@ -1,0 +1,55 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "description": "An Electron and SQLite-based ToDo Manager",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder",
+    "postinstall": "electron-rebuild -f -w sqlite3"
+  },
+  "dependencies": {
+    "sqlite3": "^5.1.7",
+    "@electron/remote": "^2.1.2"
+  },
+  "devDependencies": {
+    "electron": "^34.0.2",
+    "electron-builder": "^25.1.8",
+    "electron-rebuild": "^3.2.9"
+  },
+  "build": {
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/sqlite3/**"
+    ],
+    "appId": "com.example.todoapp",
+    "productName": "ToDo Manager",
+    "files": [
+      "**/*",
+      "!**/*.map"
+    ],
+    "directories": {
+      "buildResources": "build"
+    },
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility"
+    }
+  }
+}
