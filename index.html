@@ -8,8 +8,9 @@
 <body>
   <div class="container">
     <h1>To-Do Manager</h1>
+
     <div class="sections">
-      <!-- Projects Sidebar -->
+      <!-- Projects Sidebar (Fixed Width) -->
       <div class="sidebar">
         <h2>Projects</h2>
         <button id="add-project">Add Project</button>
@@ -18,122 +19,115 @@
         <ul id="project-list"></ul>
       </div>
 
-
-  <!-- Project Details Section -->
-  <!-- Inside the "project-details" section -->
-<!-- Inside the "project-details" section -->
- 
-<div id="project-details">
-  <input type="text" id="search" placeholder="Search tasks..." oninput="searchTasks()">
-  <div id="tasks"></div> 
-  <h2>Project Details</h2>
-  <div id="details-content">
-    <p><strong>Description:</strong> <span id="project-description">No description available</span></p>
-    <p><strong>Dev Lead:</strong> <span id="dev-lead">Not Assigned</span></p>
-    <p><strong>Business Contact:</strong> <span id="business-contact">Not Available</span></p>
-    <p><strong>Links:</strong></p>
-    <div id="links"><div>No links available</div></div>
-    <p><strong>Comments:</strong></p>
-    <div id="comments"><p>No comments yet.</p></div>
-    <textarea id="new-comment" placeholder="Add a new comment..."></textarea>
-    <button id="add-comment">Add Comment</button>
-    <button id="view-comment-history">View Comment History</button>
-    <button id="archive-project">Archive Project</button>
-    <button id="view-archived-projects">View Archived Projects</button>
-  </div>
-  <button id="edit-details">Edit Details</button>
-</div>
-
-
-
-<!-- Add a new modal for viewing comment history -->
-<div id="comment-history-modal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>Comment History</h2>
-    <div id="comment-history-content"></div>
-  </div>
-</div>
-
-<!-- Add a new modal for viewing archived projects -->
-<div id="archived-projects-modal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>Archived Projects</h2>
-    <ul id="archived-projects-list"></ul>
-  </div>
-</div>
-
-</div>
-
-
-<!-- Add a new modal for editing project details -->
-<!-- Edit Project Details Modal -->
-<div id="edit-details-modal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>Edit Project Details</h2>
-    <!-- New Project Description Field -->
-    <textarea id="edit-description" placeholder="Project Description"></textarea>
-    <input type="text" id="edit-dev-lead" placeholder="Dev Lead">
-    <input type="text" id="edit-business-contact" placeholder="Business Contact">
-    <textarea id="edit-links" placeholder="Links (one per line)"></textarea>
-    <button id="save-details">Save</button>
-  </div>
-</div>
-
-
+      <!-- Main Content Area (Expandable) -->
+      <div class="main-content">
+        <div id="project-details">
+          <input type="text" id="search" placeholder="Search tasks..." oninput="searchTasks()">
+          <div id="tasks"></div> 
+          <h2>Project Details</h2>
+          <div id="details-content">
+            <p><strong>Description:</strong> <span id="project-description">No description available</span></p>
+            <p><strong>Dev Lead:</strong> <span id="dev-lead">Not Assigned</span></p>
+            <p><strong>Business Contact:</strong> <span id="business-contact">Not Available</span></p>
+            <p><strong>Links:</strong></p>
+            <div id="links"><div>No links available</div></div>
+            <p><strong>Comments:</strong></p>
+            <div id="comments"><p>No comments yet.</p></div>
+            <textarea id="new-comment" placeholder="Add a new comment..."></textarea>
+            <button id="add-comment">Add Comment</button>
+            <!-- <button id="view-comment-history">View Comment History</button> -->
+            <button id="archive-project">Archive Project</button>
+            <button id="view-archived-projects">View Archived Projects</button>
+          </div>
+          <button id="edit-details">Edit Details</button>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- Modals -->
-  <div id="project-modal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Add Project</h2>
-      <input type="text" id="project-name" placeholder="Enter project name">
-      <button id="save-project">Save</button>
+    <!-- Modals -->
+    <!-- Comment History Modal -->
+    <div id="comment-history-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Comment History</h2>
+        <div id="comment-history-content"></div>
+      </div>
     </div>
-  </div>
 
-  <div id="task-modal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Add Task</h2>
-      <input type="text" id="task-title" placeholder="Enter task title (required)" required>
-      <input type="date" id="task-due-date" placeholder="Due date (optional)">
-      <select id="task-priority">
-        <option value="High">High</option>
-        <option value="Medium" selected>Medium</option>
-        <option value="Low">Low</option>
-      </select>
-      <select id="task-status">
-        <option value="Pending" selected>Pending</option>
-        <option value="Completed">Completed</option>
-      </select>
-      <button id="save-task">Save</button>
+    <!-- Archived Projects Modal -->
+    <div id="archived-projects-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Archived Projects</h2>
+        <ul id="archived-projects-list"></ul>
+      </div>
     </div>
-  </div>
 
-  <div id="edit-task-modal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Edit Task</h2>
-      <input type="text" id="edit-task-title" placeholder="Enter task title (required)" required>
-      <input type="date" id="edit-task-due-date" placeholder="Due date (optional)">
-      <button id="save-edit-task">Save</button>
+    <!-- Edit Project Details Modal -->
+    <div id="edit-details-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Edit Project Details</h2>
+        <textarea id="edit-description" placeholder="Project Description"></textarea>
+        <input type="text" id="edit-dev-lead" placeholder="Dev Lead">
+        <input type="text" id="edit-business-contact" placeholder="Business Contact">
+        <textarea id="edit-links" placeholder="Links (one per line)"></textarea>
+        <button id="save-details">Save</button>
+      </div>
     </div>
-  </div>
 
-  <div id="add-note-modal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Add Note</h2>
-      <textarea id="note-content" placeholder="Enter your note..."></textarea>
-      <button id="save-note">Save</button>
+    <!-- Add Project Modal -->
+    <div id="project-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Add Project</h2>
+        <input type="text" id="project-name" placeholder="Enter project name">
+        <button id="save-project">Save</button>
+      </div>
     </div>
-  </div>
 
-  <script src="renderer.js"></script>
+    <!-- Add Task Modal -->
+    <div id="task-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Add Task</h2>
+        <input type="text" id="task-title" placeholder="Enter task title (required)" required>
+        <input type="date" id="task-due-date" placeholder="Due date (optional)">
+        <select id="task-priority">
+          <option value="High">High</option>
+          <option value="Medium" selected>Medium</option>
+          <option value="Low">Low</option>
+        </select>
+        <select id="task-status">
+          <option value="Pending" selected>Pending</option>
+          <option value="Completed">Completed</option>
+        </select>
+        <button id="save-task">Save</button>
+      </div>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div id="edit-task-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Edit Task</h2>
+        <input type="text" id="edit-task-title" placeholder="Enter task title (required)" required>
+        <input type="date" id="edit-task-due-date" placeholder="Due date (optional)">
+        <button id="save-edit-task">Save</button>
+      </div>
+    </div>
+
+    <!-- Add Note Modal -->
+    <div id="add-note-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Add Note</h2>
+        <textarea id="note-content" placeholder="Enter your note..."></textarea>
+        <button id="save-note">Save</button>
+      </div>
+    </div>
+
+    <script src="renderer.js"></script>
+  </div>
 </body>
 </html>
