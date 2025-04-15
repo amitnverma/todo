@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inventory Management</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        #inventory-section {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        #search-bar {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Inventory Management</h1>
+
+    <section id="instructions">
+        <h2>Instructions</h2>
+        <p>
+            - **Search:** Use the search bar to filter inventory items by any attribute.
+            - **Import/Export:** Import inventory data from a CSV file or export the current inventory to a CSV file.
+            - **Add:** Fill out the form with the new item details and click "Add".
+            - **Update:** Modify the details of an existing item and click the "Update" button next to it.
+            - **Delete:** Click the "Delete" button next to an item to remove it from the inventory.
+        </p>
+    </section>
+
+    <div id="search-bar">
+        <input type="text" id="search-input" placeholder="Search inventory...">
+        <button onclick="searchInventory()">Search</button>
+    </div>
+
+    <button onclick="importCSV()">Import CSV</button>
+    <button onclick="exportCSV()">Export CSV</button>
+
+    <section id="inventory-section">
+        <h2>Inventory Items</h2>
+        <div id="inventory-form">
+            <table>
+                <tr>
+                    <td><label for="ecs_name">ECS Name:</label></td>
+                    <td><input type="text" id="ecs_name" name="ecs_name"></td>
+                </tr>
+                <tr>
+                    <td><label for="rds_name">RDS Name:</label></td>
+                    <td><input type="text" id="rds_name" name="rds_name"></td>
+                </tr>
+                <tr>
+                    <td><label for="rds_engine">RDS Engine:</label></td>
+                    <td><input type="text" id="rds_engine" name="rds_engine"></td>
+                </tr>
+                <tr>
+                    <td><label for="project_name">Project Name:</label></td>
+                    <td><input type="text" id="project_name" name="project_name"></td>
+                </tr>
+                <tr>
+                    <td><label for="app_name">App Name:</label></td>
+                    <td><input type="text" id="app_name" name="app_name"></td>
+                </tr>
+                <tr>
+                    <td><label for="app_lead">App Lead:</label></td>
+                    <td><input type="text" id="app_lead" name="app_lead"></td>
+                </tr>
+                <tr>
+                    <td><label for="other_developer_contacts">Other Developer Contacts:</label></td>
+                    <td><input type="text" id="other_developer_contacts" name="other_developer_contacts"></td>
+                </tr>
+                <tr>
+                    <td><label for="project_manager">Project Manager:</label></td>
+                    <td><input type="text" id="project_manager" name="project_manager"></td>
+                </tr>
+                <tr>
+                    <td><label for="program_name_updated">Program Name Updated:</label></td>
+                    <td><input type="text" id="program_name_updated" name="program_name_updated"></td>
+                </tr>
+                <tr>
+                    <td><label for="status">Status:</label></td>
+                    <td><input type="text" id="status" name="status"></td>
+                </tr>
+                <tr>
+                    <td><label for="used_by_agencies">Used By (Agencies):</label></td>
+                    <td><input type="text" id="used_by_agencies" name="used_by_agencies"></td>
+                </tr>
+                <tr>
+                    <td><label for="azdo_link">AzDo Link (If Any):</label></td>
+                    <td><input type="text" id="azdo_link" name="azdo_link"></td>
+                </tr>
+                <tr>
+                    <td><label for="operation_technical_design_wiki">Operation Technical Design Wiki:</label></td>
+                    <td><input type="text" id="operation_technical_design_wiki" name="operation_technical_design_wiki"></td>
+                </tr>
+                <tr>
+                    <td><label for="technical_design_wiki">Technical Design Wiki:</label></td>
+                    <td><input type="text" id="technical_design_wiki" name="technical_design_wiki"></td>
+                </tr>
+                <tr>
+                    <td><label for="application_summary">Application Summary:</label></td>
+                    <td><textarea id="application_summary" name="application_summary"></textarea></td>
+                </tr>
+                <tr>
+                    <td><label for="comments_documentation">Comments (Documentation):</label></td>
+                    <td><textarea id="comments_documentation" name="comments_documentation"></textarea></td>
+                </tr>
+                <tr>
+                    <td><label for="comments_alarms">Comments (Alarms):</label></td>
+                    <td><textarea id="comments_alarms" name="comments_alarms"></textarea></td>
+                </tr>
+                <tr>
+                    <td><label for="hosted_environment">Hosted Environment:</label></td>
+                    <td><input type="text" id="hosted_environment" name="hosted_environment"></td>
+                </tr>
+            </table>
+        </div>
+
+        <h3>Inventory List</h3>
+        <button onclick="addInventoryItemFromForm()">Add</button>
+        <div id="inventory-list">
+            <!-- Inventory items will be displayed here -->
+        </div>
+    </section>
+
+    <script>
+        // Placeholder functions - implement these in inventory.js
+        function searchInventory() {
+            console.log("Search functionality not yet implemented.");
+        }
+
+        function importCSV() {
+            console.log("Import CSV functionality not yet implemented.");
+        }
+
+        function exportCSV() {
+            console.log("Export CSV functionality not yet implemented.");
+        }
+
+        function addInventoryItemFromForm() {
+            console.log("Add functionality not yet implemented.");
+        }
+    </script>
+</body>
+</html>

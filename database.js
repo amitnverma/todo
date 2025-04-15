@@ -93,6 +93,30 @@ db.serialize(() => {
       FOREIGN KEY (project_id) REFERENCES projects(id)
     )
   `);
+
+  // Create the inventory table
+  db.run(`
+    CREATE TABLE IF NOT EXISTS inventory (
+      ecs_name TEXT PRIMARY KEY,
+      rds_name TEXT,
+      rds_engine TEXT,
+      project_name TEXT,
+      app_name TEXT,
+      app_lead TEXT,
+      other_developer_contacts TEXT,
+      project_manager TEXT,
+      program_name_updated TEXT,
+      status TEXT,
+      used_by_agencies TEXT,
+      azdo_link TEXT,
+      operation_technical_design_wiki TEXT,
+      technical_design_wiki TEXT,
+      application_summary TEXT,
+      comments_documentation TEXT,
+      comments_alarms TEXT,
+      hosted_environment TEXT
+    )
+  `);
 });
 
 // Export the database instance
