@@ -1,59 +1,39 @@
 // inventory.js
 
-const db = require('./database');
-
 async function fetchInventory() {
-    return new Promise((resolve, reject) => {
-        db.all("SELECT * FROM inventory", [], (err, rows) => {
-            if (err) {
-                console.error("Error fetching inventory:", err);
-                reject(err);
-            } else {
-                resolve(rows);
-            }
-        });
-    });
+    try {
+        return await window.api.inventoryDb.getAllItems();
+    } catch (error) {
+        console.error("Error fetching inventory:", error);
+        throw error;
+    }
 }
 
 async function addInventoryItem(item) {
-    return new Promise((resolve, reject) => {
-        const sql = `INSERT INTO inventory (ecs_name, rds_name, rds_engine, project_name, app_name, app_lead, other_developer_contacts, project_manager, program_name_updated, status, used_by_agencies, azdo_link, operation_technical_design_wiki, technical_design_wiki, application_summary, comments_documentation, comments_alarms, hosted_environment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        db.run(sql, [item["ECS name"], item["RDS name"], item["RDS engine"], item["Project Name"], item["AppName"], item["App Lead"], item["Other Developer Contacts"], item["Project Manager"], item["Program Name_updated"], item["Status"], item["Used By (Agencies)"], item["AzDo Link( If Any)"], item["Operation Technical Design wiki"], item["Technical Design Wiki"], item["Application Summary"], item["Comments (Documentation)"], item["Comments (Alarms)"], item["Hosted environment"]], function (err) {
-            if (err) {
-                console.error("Error adding inventory item:", err);
-                reject(err);
-            } else {
-                resolve(this.lastID);
-            }
-        });
-    });
+    try {
+        return await window.api.inventoryDb.addItem(item);
+    } catch (error) {
+        console.error("Error adding inventory item:", error);
+        throw error;
+    }
 }
 
 async function updateInventoryItem(item) {
-    return new Promise((resolve, reject) => {
-        const sql = `UPDATE inventory SET rds_name=?, rds_engine=?, project_name=?, app_name=?, app_lead=?, other_developer_contacts=?, project_manager=?, program_name_updated=?, status=?, used_by_agencies=?, azdo_link=?, operation_technical_design_wiki=?, technical_design_wiki=?, application_summary=?, comments_documentation=?, comments_alarms=?, hosted_environment=? WHERE ecs_name=?`;
-        db.run(sql, [item["RDS name"], item["RDS engine"], item["Project Name"], item["AppName"], item["App Lead"], item["Other Developer Contacts"], item["Project Manager"], item["Program Name_updated"], item["Status"], item["Used By (Agencies)"], item["AzDo Link( If Any)"], item["Operation Technical Design wiki"], item["Technical Design Wiki"], item["Application Summary"], item["Comments (Documentation)"], item["Comments (Alarms)"], item["Hosted environment"], item["ECS name"]], function (err) {
-            if (err) {
-                console.error("Error updating inventory item:", err);
-                reject(err);
-            } else {
-                resolve(this.changes);
-            }
-        });
-    });
+    try {
+        return await window.api.inventoryDb.updateItem(item);
+    } catch (error) {
+        console.error("Error updating inventory item:", error);
+        throw error;
+    }
 }
 
 async function deleteInventoryItem(ecs_name) {
-    return new Promise((resolve, reject) => {
-        db.run("DELETE FROM inventory WHERE ecs_name=?", [ecs_name], function (err) {
-            if (err) {
-                console.error("Error deleting inventory item:", err);
-                reject(err);
-            } else {
-                resolve(this.changes);
-            }
-        });
-    });
+    try {
+        return await window.api.inventoryDb.deleteItem(ecs_name);
+    } catch (error) {
+        console.error("Error deleting inventory item:", error);
+        throw error;
+    }
 }
 
 function displayInventory(data) {
@@ -172,9 +152,9 @@ async function updateInventoryItemFromForm(ecs_name) {
     const updatedItem = { "ecs_name": ecs_name };
     const headers = ["rds_name", "rds_engine", "project_name", "app_name", "app_lead", "other_developer_contacts", "project_manager", "program_name_updated", "status", "used_by_agencies", "azdo_link", "operation_technical_design_wiki", "technical_design_wiki", "application_summary", "comments_documentation", "comments_alarms", "hosted_environment"];
 
-      headers.forEach(header => {
-          updatedItem[header] = document.getElementById(`${header}-${ecs_name}`).value;
-      });
+    headers.forEach(header => {
+        updatedItem[header] = document.getElementById(`${header}-${ecs_name}`).value;
+    });
 
     // Basic validation - check if any fields are empty (you might want to adjust this based on your requirements)
     for (const key in updatedItem) {
@@ -184,11 +164,11 @@ async function updateInventoryItemFromForm(ecs_name) {
         }
     }
 
-      // Validation (add more as needed)
-      if (!ecs_name) {
-          alert("ECS Name cannot be empty.");
-          return;
-    });
+    // Validation (add more as needed)
+    if (!ecs_name) {
+        alert("ECS Name cannot be empty.");
+        return;
+    }
 
     try {
         await updateInventoryItem(updatedItem);
@@ -215,72 +195,83 @@ async function searchInventory(searchTerm) {
 }
 
 async function importCSV() {
-    const fileInput = document.getElementById('csv-file');
-    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
-        alert('Please select a CSV file to import.');
-        return;
-    }
-
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-    reader.onload = async function (event) {
-        const text = event.target.result;
-        const lines = text.split('\n').filter(line => line.trim() !== "");
-        if (lines.length === 0) {
-            alert('The CSV file is empty.');
-            return;
-        }
-
-        const headers = lines[0].split(',').map(header => header.trim());
-        const items = lines.slice(1).map(line => {
-            const values = line.split(',').map(value => value.trim());
-            return headers.reduce((obj, header, index) => {
-                obj[header] = values[index];
-                return obj;
-            }, {});
+    try {
+        const result = await window.api.showOpenDialog({
+            properties: ['openFile'],
+            filters: [{ name: 'CSV Files', extensions: ['csv'] }]
         });
 
-        try {
+        if (!result.canceled && result.filePaths.length > 0) {
+            const filePath = result.filePaths[0];
+            const csvContent = await window.api.readFile(filePath);
+            
+            // Parse CSV content
+            const lines = csvContent.split('\n').filter(line => line.trim() !== "");
+            if (lines.length === 0) {
+                throw new Error('The CSV file is empty.');
+            }
+
+            const headers = lines[0].split(',').map(header => header.trim());
+            const items = lines.slice(1).map(line => {
+                const values = line.split(',').map(value => value.trim());
+                return headers.reduce((obj, header, index) => {
+                    obj[header] = values[index] || '';
+                    return obj;
+                }, {});
+            });
+
+            // Import each item
             for (const item of items) {
                 await addInventoryItem(item);
             }
+
             alert('CSV data imported successfully.');
-            displayInventory(await fetchInventory());
-        } catch (error) {
-            console.error('Error importing CSV data:', error);
-            alert('Error importing CSV data. Please check the file format.');
+            const inventory = await fetchInventory();
+            displayInventory(inventory);
         }
-    };
-    reader.readAsText(file);
+    } catch (error) {
+        console.error('Error importing CSV:', error);
+        alert(`Failed to import CSV: ${error.message}`);
+    }
 }
 
 async function exportCSV() {
     try {
-        const inventoryData = await fetchInventory();
-        if (inventoryData.length === 0) {
+        const inventory = await fetchInventory();
+        if (inventory.length === 0) {
             alert('No data to export.');
             return;
         }
 
-        const headers = Object.keys(inventoryData[0]);
+        // Get headers from the first item
+        const headers = Object.keys(inventory[0]);
+        
+        // Create CSV content
         const csvContent = [
-            headers.join(','),
-            ...inventoryData.map(item => headers.map(header => item[header]).join(','))
+            headers.join(','), // Header row
+            ...inventory.map(item => 
+                headers.map(header => 
+                    // Escape special characters and wrap in quotes if needed
+                    typeof item[header] === 'string' && (item[header].includes(',') || item[header].includes('"')) 
+                        ? `"${item[header].replace(/"/g, '""')}"` 
+                        : item[header] || ''
+                ).join(',')
+            )
         ].join('\n');
 
-        const blob = new Blob([csvContent], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'inventory.csv');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        // Show save dialog
+        const result = await window.api.showSaveDialog({
+            filters: [{ name: 'CSV Files', extensions: ['csv'] }],
+            defaultPath: `inventory_export_${new Date().toISOString().split('T')[0]}.csv`
+        });
 
+        if (!result.canceled && result.filePath) {
+            await window.api.writeFile(result.filePath, csvContent);
+            alert('Inventory data exported successfully.');
+        }
     } catch (error) {
         console.error('Error exporting CSV:', error);
-        alert('Error exporting CSV data.');
+        alert(`Failed to export CSV: ${error.message}`);
     }
 }
 
@@ -301,129 +292,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     } catch (error) {
         console.error("Error fetching initial inventory:", error);
-        if (inventorySection) inventorySection.textContent = "Error loading inventory.";
-    }
-
-    const searchBar = document.getElementById("search-bar");
-    if (searchBar) searchBar.addEventListener("input", (event) => {
-        if (event && event.target) searchInventory(event.target.value);
-    });
-
-    const importButton = document.getElementById("import-csv");
-    if (importButton) importButton.addEventListener("click", importCSV);
-
-    const exportButton = document.getElementById("export-csv");
-    if (exportButton) exportButton.addEventListener("click", exportCSV);
-});
-
-                </tr>
-            </thead>
-            <tbody></tbody> 
-        `;
-        const tbody = table.querySelector("tbody");
-
-        data.forEach(item => {
-            const row = document.createElement("tr");
-            row.innerHTML = Object.values(item).map(value => `<td>${value}</td>`).join('');
-            tbody.appendChild(row);
-        });
-
-        if (inventorySection) inventorySection.appendChild(table);
-    }
-}
-
-async function searchInventory(searchTerm) {
-    try {
-        const inventoryData = await fetchInventory();
-        const filteredData = inventoryData.filter(item => {
-            return Object.values(item).some(value =>
-                String(value).toLowerCase().includes(searchTerm.toLowerCase())
-            );
-        });
-        displayInventory(filteredData);
-    } catch (error) {
-        console.error("Error searching inventory:", error);
-    }
-}
-
-async function importCSV() {
-    const fileInput = document.getElementById('csv-file');
-    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
-        alert('Please select a CSV file to import.');
-        return;
-    }
-
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-    reader.onload = async function (event) {
-        const text = event.target.result;
-        const lines = text.split('\n').filter(line => line.trim() !== "");
-        if (lines.length === 0) {
-            alert('The CSV file is empty.');
-            return;
-        }
-
-        const headers = lines[0].split(',').map(header => header.trim());
-        const items = lines.slice(1).map(line => {
-            const values = line.split(',').map(value => value.trim());
-            return headers.reduce((obj, header, index) => {
-                obj[header] = values[index];
-                return obj;
-            }, {});
-        });
-
-        try {
-            for (const item of items) {
-                await addInventoryItem(item);
-            }
-            alert('CSV data imported successfully.');
-            displayInventory(await fetchInventory());
-        } catch (error) {
-            console.error('Error importing CSV data:', error);
-            alert('Error importing CSV data. Please check the file format.');
-        }
-    };
-    reader.readAsText(file);
-}
-
-async function exportCSV() {
-    try {
-        const inventoryData = await fetchInventory();
-        if (inventoryData.length === 0) {
-            alert('No data to export.');
-            return;
-        }
-
-        const headers = Object.keys(inventoryData[0]);
-        const csvContent = [
-            headers.join(','),
-            ...inventoryData.map(item => headers.map(header => item[header]).join(','))
-        ].join('\n');
-
-        const blob = new Blob([csvContent], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'inventory.csv');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-
-    } catch (error) {
-        console.error('Error exporting CSV:', error);
-        alert('Error exporting CSV data.');
-    }
-}
-
-// Initial display of inventory
-document.addEventListener("DOMContentLoaded", () => {
-    try {
-        const inventoryData = await fetchInventory();
-        displayInventory(inventoryData);
-    } catch (error) {
-        console.error("Error fetching initial inventory:", error);
-        const inventorySection = document.getElementById("inventory-items");
         if (inventorySection) inventorySection.textContent = "Error loading inventory.";
     }
 

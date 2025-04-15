@@ -1,5 +1,5 @@
 async function queryDB(sql, params = []) {
-  return window.api.queryDB(sql, params);
+  return window.api.queryDb(sql, params);
 }
 
 // Load projects from the database
