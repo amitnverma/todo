@@ -1,0 +1,175 @@
+const path = require('path');
+const { app } = require('electron');
+
+let sqlite3;
+
+try {
+  // Attempt the normal require for sqlite3
+  sqlite3 = require('sqlite3').verbose();
+} catch (err) {
+  console.warn('Standard require for sqlite3 failed, attempting to load from app.asar.unpacked');
+  // Construct the path to the unpacked sqlite3 module.
+  // process.resourcesPath typically points to: /Applications/ToDo Manager.app/Contents/Resources
+  const unpackedSqlite3Path = path.join(process.resourcesPath, 'app.asar.unpacked', 'node_modules', 'sqlite3');
+  sqlite3 = require(unpackedSqlite3Path).verbose();
+}
+
+// Database file path (stored in user's local app data)
+const dbPath = path.join(app.getPath('userData'), 'todo.db');
+
+function initializeTables(db) {
+  return new Promise((resolve, reject) => {
+    db.serialize(() => {
+      db.run('BEGIN TRANSACTION');
+
+      const tables = [
+        {
+          name: 'projects',
+          sql: `CREATE TABLE IF NOT EXISTS projects (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL
+          )`
+        },
+        {
+          name: 'tasks',
+          sql: `CREATE TABLE IF NOT EXISTS tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            project_id INTEGER,
+            title TEXT NOT NULL,
+            due_date TEXT,
+            created_date TEXT DEFAULT (DATE('now')),
+            priority TEXT DEFAULT 'Medium',
+            status TEXT DEFAULT 'Pending',
+            FOREIGN KEY (project_id) REFERENCES projects(id)
+          )`
+        },
+        {
+          name: 'notes',
+          sql: `CREATE TABLE IF NOT EXISTS notes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            task_id INTEGER,
+            content TEXT,
+            note_date TEXT DEFAULT (DATETIME('now')),
+            FOREIGN KEY (task_id) REFERENCES tasks(id)
+          )`
+        },
+        {
+          name: 'project_details',
+          sql: `CREATE TABLE IF NOT EXISTS project_details (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            project_id INTEGER,
+            description TEXT,
+            dev_lead TEXT,
+            business_contact TEXT,
+            links TEXT,
+            FOREIGN KEY (project_id) REFERENCES projects(id)
+          )`
+        },
+        {
+          name: 'project_comments',
+          sql: `CREATE TABLE IF NOT EXISTS project_comments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            project_id INTEGER,
+            comment TEXT,
+            comment_date TEXT DEFAULT (DATETIME('now')),
+            FOREIGN KEY (project_id) REFERENCES projects(id)
+          )`
+        },
+        {
+          name: 'project_archive',
+          sql: `CREATE TABLE IF NOT EXISTS project_archive (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            project_id INTEGER,
+            archived_date TEXT DEFAULT (DATETIME('now')),
+            FOREIGN KEY (project_id) REFERENCES projects(id)
+          )`
+        },
+        {
+          name: 'inventory',
+          sql: `CREATE TABLE IF NOT EXISTS inventory (
+            ecs_name TEXT PRIMARY KEY,
+            rds_name TEXT,
+            rds_engine TEXT,
+            project_name TEXT,
+            app_name TEXT,
+            app_lead TEXT,
+            other_developer_contacts TEXT,
+            project_manager TEXT,
+            program_name_updated TEXT,
+            status TEXT,
+            used_by_agencies TEXT,
+            azdo_link TEXT,
+            operation_technical_design_wiki TEXT,
+            technical_design_wiki TEXT,
+            application_summary TEXT,
+            comments_documentation TEXT,
+            comments_alarms TEXT,
+            hosted_environment TEXT
+          )`
+        }
+      ];
+
+      let error = null;
+
+      // Create all tables
+      tables.forEach(table => {
+        if (error) return;
+        db.run(table.sql, (err) => {
+          if (err) {
+            error = err;
+            console.error(`Error creating ${table.name} table:`, err);
+          }
+        });
+      });
+
+      // Verify all tables exist
+      db.all("SELECT name FROM sqlite_master WHERE type='table'", [], (err, rows) => {
+        if (err) {
+          db.run('ROLLBACK');
+          reject(err);
+          return;
+        }
+
+        const tableNames = rows.map(row => row.name);
+        const missingTables = tables.filter(table => !tableNames.includes(table.name));
+
+        if (missingTables.length > 0) {
+          const error = new Error(`Missing tables: ${missingTables.map(t => t.name).join(', ')}`);
+          db.run('ROLLBACK');
+          reject(error);
+          return;
+        }
+
+        db.run('COMMIT', (err) => {
+          if (err) {
+            reject(err);
+          } else {
+            console.log('All tables initialized successfully');
+            resolve();
+          }
+        });
+      });
+    });
+  });
+}
+
+// Initialize the database
+const db = new sqlite3.Database(dbPath, async (err) => {
+  if (err) {
+    console.error('Database error:', err);
+    throw err;
+  }
+  console.log('Connected to SQLite database');
+  console.log('Database path:', dbPath);
+  
+  try {
+    await initializeTables(db);
+    console.log('Database initialization completed successfully');
+  } catch (error) {
+    console.error('Database initialization failed:', error);
+    throw error;
+  }
+});
+
+// Export the database instance
+module.exports = db;

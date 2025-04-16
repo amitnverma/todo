@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inventory Management</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        #inventory-section {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 1rem 0;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .delete-button {
+            background-color: #dc3545;
+        }
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+        .update-button {
+            background-color: #28a745;
+        }
+        .update-button:hover {
+            background-color: #218838;
+        }
+        .hidden {
+            display: none;
+        }
+        .help-icon {
+            color: #6c757d;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        .help-tooltip {
+            display: none;
+            position: absolute;
+            background: #333;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 100;
+        }
+        .help-icon:hover + .help-tooltip {
+            display: block;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #6c757d;
+        }
+        .tab.active {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        #search-bar {
+            margin-bottom: 20px;
+        }
+        #search-input {
+            width: 300px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Inventory Management</h1>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('inventory')">Inventory</button>
+            <button class="tab" onclick="showTab('help')">Help & Instructions</button>
+        </div>
+
+        <div id="inventory-tab" class="tab-content active">
+            <div class="button-group">
+                <input type="text" id="search-input" placeholder="Search inventory...">
+                <button onclick="searchInventory(document.getElementById('search-input').value)">Search</button>
+                <input type="file" id="csv-file" accept=".csv" class="hidden">
+                <button onclick="document.getElementById('csv-file').click()">Import CSV</button>
+                <button onclick="exportCSV()">Export CSV</button>
+                <button onclick="downloadSampleCSV()">Download Template</button>
+            </div>
+
+            <div id="inventory-section">
+                <h2>Add New Item</h2>
+                <div id="inventory-form">
+                    <table>
+                        <tr>
+                            <td><label for="ecs_name">ECS Name: *</label></td>
+                            <td><input type="text" id="ecs_name" name="ecs_name" required></td>
+                            <td><label for="rds_name">RDS Name:</label></td>
+                            <td><input type="text" id="rds_name" name="rds_name"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="rds_engine">RDS Engine:</label></td>
+                            <td><input type="text" id="rds_engine" name="rds_engine"></td>
+                            <td><label for="project_name">Project Name:</label></td>
+                            <td><input type="text" id="project_name" name="project_name"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="app_name">App Name:</label></td>
+                            <td><input type="text" id="app_name" name="app_name"></td>
+                            <td><label for="app_lead">App Lead:</label></td>
+                            <td><input type="text" id="app_lead" name="app_lead"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="other_developer_contacts">Other Contacts:</label></td>
+                            <td><input type="text" id="other_developer_contacts" name="other_developer_contacts"></td>
+                            <td><label for="project_manager">Project Manager:</label></td>
+                            <td><input type="text" id="project_manager" name="project_manager"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="program_name_updated">Program Name:</label></td>
+                            <td><input type="text" id="program_name_updated" name="program_name_updated"></td>
+                            <td><label for="status">Status:</label></td>
+                            <td><input type="text" id="status" name="status"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="used_by_agencies">Used By:</label></td>
+                            <td><input type="text" id="used_by_agencies" name="used_by_agencies"></td>
+                            <td><label for="azdo_link">AzDo Link:</label></td>
+                            <td><input type="text" id="azdo_link" name="azdo_link"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="operation_technical_design_wiki">Operation Wiki:</label></td>
+                            <td><input type="text" id="operation_technical_design_wiki" name="operation_technical_design_wiki"></td>
+                            <td><label for="technical_design_wiki">Tech Wiki:</label></td>
+                            <td><input type="text" id="technical_design_wiki" name="technical_design_wiki"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="application_summary">App Summary:</label></td>
+                            <td colspan="3"><textarea id="application_summary" name="application_summary"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><label for="comments_documentation">Doc Comments:</label></td>
+                            <td colspan="3"><textarea id="comments_documentation" name="comments_documentation"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><label for="comments_alarms">Alarm Comments:</label></td>
+                            <td colspan="3"><textarea id="comments_alarms" name="comments_alarms"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><label for="hosted_environment">Environment:</label></td>
+                            <td colspan="3"><input type="text" id="hosted_environment" name="hosted_environment"></td>
+                        </tr>
+                    </table>
+                    <div class="button-group">
+                        <button onclick="addInventoryItemFromForm()">Add Item</button>
+                        <span>* Required field</span>
+                    </div>
+                </div>
+
+                <h2>Inventory List</h2>
+                <div id="inventory-items">
+                    <!-- Inventory items will be displayed here -->
+                </div>
+            </div>
+        </div>
+
+        <div id="help-tab" class="tab-content">
+            <h2>Instructions</h2>
+            <div class="instructions-box">
+                <h3>Basic Operations</h3>
+                <ul>
+                    <li><strong>Search:</strong> Use the search bar to filter inventory items by any attribute.</li>
+                    <li><strong>Add:</strong> Fill out the form with the new item details and click "Add Item".</li>
+                    <li><strong>Update:</strong> Modify the details of an existing item and click the "Update" button.</li>
+                    <li><strong>Delete:</strong> Click the "Delete" button next to an item to remove it.</li>
+                </ul>
+
+                <h3>CSV Import/Export</h3>
+                <p>The CSV file must have these columns in order:</p>
+                <div class="csv-format">
+ecs_name,rds_name,rds_engine,project_name,app_name,app_lead,other_developer_contacts,project_manager,program_name_updated,status,used_by_agencies,azdo_link,operation_technical_design_wiki,technical_design_wiki,application_summary,comments_documentation,comments_alarms,hosted_environment</div>
+
+                <p><strong>Notes:</strong></p>
+                <ul>
+                    <li>ECS Name is required and must be unique</li>
+                    <li>Use commas to separate values</li>
+                    <li>If a value contains commas, enclose it in double quotes</li>
+                    <li>Empty values are allowed for optional fields</li>
+                </ul>
+
+                <p>Click "Download Template" to get a sample CSV file with the correct format.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="inventory.js"></script>
+    <script>
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const inventory = await fetchInventory();
+                displayInventory(inventory);
+            } catch (error) {
+                console.error('Error loading inventory:', error);
+                alert('Failed to load inventory data. Please make sure the database is properly initialized.');
+            }
+        });
+
+        // Set up CSV file input listener
+        document.getElementById('csv-file').addEventListener('change', async (event) => {
+            if (event.target.files.length > 0) {
+                try {
+                    await importCSV();
+                    event.target.value = ''; // Reset file input
+                } catch (error) {
+                    console.error('Error importing CSV:', error);
+                    alert('Failed to import CSV file. Please make sure the file follows the required format.');
+                }
+            }
+        });
+
+        // Tab switching functionality
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            document.querySelector(`.tab[onclick="showTab('${tabName}')"]`).classList.add('active');
+        }
+    </script>
+</body>
+</html>

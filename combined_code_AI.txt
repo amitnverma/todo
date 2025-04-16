@@ -1,0 +1,555 @@
+File: styles.css
+
+/* General Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+/* Sections Layout */
+/* .sections {
+  display: flex;
+  gap: 20px;
+} */
+
+/* Ensure sections layout stays fixed */
+.sections {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start; 
+}
+
+
+/* .sidebar {
+  width: 250px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+} */
+
+/* Sidebar - Fixed Width */
+.sidebar {
+  flex: 0 0 510px; 
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden; 
+}
+
+/* .main-content {
+  flex: 1;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-left: 20px; 
+} */
+
+/* Main Content - Expandable */
+.main-content {
+  flex-grow: 1; /* Takes remaining space */
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 500px; 
+  max-width: 100%; 
+  overflow-x: auto; 
+}
+
+/* Fixing project list text overflow */
+#project-list {
+  list-style: none;
+  padding: 0;
+  max-width: 600px; 
+  word-break: break-word; 
+}
+
+
+/* Ensures project list items do not stretch */
+#project-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px;
+  background-color: #ecf0f1;
+  border-radius: 4px;
+  margin-bottom: 6px;
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+
+#project-list button {
+  margin-left: 1px;
+  /* padding: 2px 2px; */
+  border:blue
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 12px;
+  color: darkblue;
+  font-weight: bold;
+}
+
+#project-list button:hover {
+  opacity: 0.8;
+}
+
+/* Style the tasks section */
+#tasks {
+  margin-top: 20px;
+}
+
+.task {
+  background-color: #ecf0f1;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+.task h3 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.task p {
+  margin: 5px 0;
+  color: #7f8c8d;
+}
+
+.task button {
+  margin-right: 5px;
+  padding: 3px 3px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.task button:hover {
+  opacity: 0.8;
+}
+
+
+/* Notes Section */
+.note {
+  background-color: #fff;
+  padding: 10px;
+  margin-top: 10px;
+  border-left: 3px solid #3498db;
+  border-radius: 4px;
+}
+
+.note p {
+  margin: 0;
+  color: #333;
+}
+
+.note small {
+  color: #7f8c8d;
+  font-size: 12px;
+}
+
+/* Modals */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.modal-content button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #3498db;
+  color: #fff;
+}
+
+.modal-content button:hover {
+  background-color: #2980b9;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #000;
+}
+
+/* Search Bar */
+#search {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+/* Project Details Section */
+#project-details {
+  width: 100%; 
+  max-width: 800px;
+  margin: 0 auto; 
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+#project-details h2 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+#details-content p {
+  margin: 10px 0;
+  color: #333;
+}
+
+#details-content strong {
+  color: #2c3e50;
+}
+
+#edit-details {
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #3498db;
+  color: #fff;
+  cursor: pointer;
+}
+
+#edit-details:hover {
+  background-color: #2980b9;
+}
+
+/* Edit Details Modal */
+#edit-details-modal textarea {
+  height: 100px;
+  resize: vertical;
+}
+/* Links styling */
+#links .link-item {
+  display: block;
+  margin: 4px 0;
+}
+
+/* Add these styles to the existing CSS */
+#project-description {
+  display: block;
+  margin-top: 10px;
+  color: #333;
+}
+
+#comments {
+  margin-top: 10px;
+}
+
+#new-comment {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+#add-comment {
+  margin-top: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #3498db;
+  color: #fff;
+  cursor: pointer;
+}
+
+#add-comment:hover {
+  background-color: #2980b9;
+}
+
+#view-comment-history, #archive-project, #view-archived-projects {
+  margin-top: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #3498db;
+  color: #fff;
+  cursor: pointer;
+}
+
+#view-comment-history:hover, #archive-project:hover, #view-archived-projects:hover {
+  background-color: #2980b9;
+}
+
+#comment-history-content, #archived-projects-list {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 10px;
+}
+
+/* Add these styles to the existing CSS */
+#project-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px;
+  background-color: #ecf0f1;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  word-break: break-word; 
+}
+.archived-project {
+  background-color: #f5f5f5;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.archived-project-name {
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-bottom: 10px;
+}
+
+.archived-project-details {
+  margin-bottom: 10px;
+}
+
+.archived-project-details p {
+  margin: 5px 0;
+  color: #555;
+}
+
+
+#archived-projects-list {
+  list-style: none;
+  padding: 0;
+}
+
+#archived-projects-list li {
+  margin-bottom: 15px;
+}
+
+/* Style the archived projects modal */
+#archived-projects-modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#archived-projects-modal .modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 510px;
+}
+
+/* Highlight selected project */
+#project-list li.selected-project {
+  background-color: #3498db !important;
+  color: white;
+  font-weight: bold;
+}
+
+
+File: index.html
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>To-Do Manager</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>To-Do Manager</h1>
+
+    <div class="sections">
+      <!-- Projects Sidebar (Fixed Width) -->
+      <div class="sidebar">
+        <h2>Projects</h2>
+        <button id="add-project">Add Project</button>
+        <button id="import-data">Import Data</button>
+        <button id="export-data">Export Data</button>
+        <ul id="project-list"></ul>
+      </div>
+
+      <!-- Main Content Area (Expandable) -->
+      <div class="main-content">
+        <div id="project-details">
+          <input type="text" id="search" placeholder="Search tasks..." oninput="searchTasks()">
+          <div id="tasks"></div> 
+          <h2>Project Details</h2>
+          <div id="details-content">
+            <p><strong>Description:</strong> <span id="project-description">No description available</span></p>
+            <p><strong>Dev Lead:</strong> <span id="dev-lead">Not Assigned</span></p>
+            <p><strong>Business Contact:</strong> <span id="business-contact">Not Available</span></p>
+            <p><strong>Links:</strong></p>
+            <div id="links"><div>No links available</div></div>
+            <p><strong>Comments:</strong></p>
+            <div id="comments"><p>No comments yet.</p></div>
+            <textarea id="new-comment" placeholder="Add a new comment..."></textarea>
+            <button id="add-comment">Add Comment</button>
+            <!-- <button id="view-comment-history">View Comment History</button> -->
+            <button id="archive-project">Archive Project</button>
+            <button id="view-archived-projects">View Archived Projects</button>
+          </div>
+          <button id="edit-details">Edit Details</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Comment History Modal -->
+    <div id="comment-history-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Comment History</h2>
+        <div id="comment-history-content"></div>
+      </div>
+    </div>
+
+    <!-- Archived Projects Modal -->
+    <div id="archived-projects-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Archived Projects</h2>
+        <ul id="archived-projects-list"></ul>
+      </div>
+    </div>
+
+    <!-- Edit Project Details Modal -->
+    <div id="edit-details-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Edit Project Details</h2>
+        <textarea id="edit-description" placeholder="Project Description"></textarea>
+        <input type="text" id="edit-dev-lead" placeholder="Dev Lead">
+        <input type="text" id="edit-business-contact" placeholder="Business Contact">
+        <textarea id="edit-links" placeholder="Links (one per line)"></textarea>
+        <button id="save-details">Save</button>
+      </div>
+    </div>
+
+    <!-- Add Project Modal -->
+    <div id="project-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Add Project</h2>
+        <input type="text" id="project-name" placeholder="Enter project name">
+        <button id="save-project">Save</button>
+      </div>
+    </div>
+
+    <!-- Add Task Modal -->
+    <div id="task-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Add Task</h2>
+        <input type="text" id="task-title" placeholder="Enter task title (required)" required>
+        <input type="date" id="task-due-date" placeholder="Due date (optional)">
+        <select id="task-priority">
+          <option value="High">High</option>
+          <option value="Medium" selected>Medium</option>
+          <option value="Low">Low</option>
+        </select>
+        <select id="task-status">
+          <option value="Pending" selected>Pending</option>
+          <option value="Completed">Completed</option>
+        </select>
+        <button id="save-task">Save</button>
+      </div>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div id="edit-task-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Edit Task</h2>
+        <input type="text" id="edit-task-title" placeholder="Enter task title (required)" required>
+        <input type="date" id="edit-task-due-date" placeholder="Due date (optional)">
+        <button id="save-edit-task">Save</button>
+      </div>
+    </div>
+
+    <!-- Add Note Modal -->
+    <div id="add-note-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Add Note</h2>
+        <textarea id="note-content" placeholder="Enter your note..."></textarea>
+        <button id="save-note">Save</button>
+      </div>
+    </div>
+
+    <script src="renderer.js"></script>
+  </div>
+</body>
+</html>
+
+
